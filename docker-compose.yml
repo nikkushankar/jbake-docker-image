@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./www:/usr/share/nginx/html
+    depends_on:
+      - jbake
+    ports:
+      - 80:80
+    restart: unless-stopped
+    
+  jbake:
+    image: jbake.org/jbake-docker:2.6.4
+    container_name: jbake
+    restart: on-failure
+    volumes:
+      - ./www:/u01/app/www
+      - ./src:/u01/app/src
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - JBAKE_VER=jbake-2.6.4
+
